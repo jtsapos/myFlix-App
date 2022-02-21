@@ -1,0 +1,29 @@
+{
+  "name": "myflix-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jtsapos/myFlix-App.git"
+  },
+  "keywords": [],
+  "author": "John Tsapos",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jtsapos/myFlix-App/issues"
+  },
+  "homepage": "https://github.com/jtsapos/myFlix-App#readme",
+  "dependencies": {
+    "body-parser": "^1.19.2",
+    "express": "^4.17.3",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "eslint": "^8.9.0"
+  },
+  "description": "Json package for myFlix-app"
+}

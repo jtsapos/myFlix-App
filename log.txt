@@ -1,0 +1,18 @@
+URL: /documentaion
+Timestamp: Sun Feb 20 2022 15:16:11 GMT-0500 (Eastern Standard Time)
+
+URL: /js/fetch.js
+Timestamp: Sun Feb 20 2022 15:16:14 GMT-0500 (Eastern Standard Time)
+
+URL: /css/styles.css
+Timestamp: Sun Feb 20 2022 15:16:14 GMT-0500 (Eastern Standard Time)
+
+URL: /js/promise-polyfill.js
+Timestamp: Sun Feb 20 2022 15:16:14 GMT-0500 (Eastern Standard Time)
+
+URL: /js/scripts.js
+Timestamp: Sun Feb 20 2022 15:16:14 GMT-0500 (Eastern Standard Time)
+
+URL: /favicon.ico
+Timestamp: Sun Feb 20 2022 15:16:17 GMT-0500 (Eastern Standard Time)
+
