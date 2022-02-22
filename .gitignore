@@ -256,3 +256,11 @@ node_modules/bytes/Readme.md
 node_modules/callsites/index.d.ts
 node_modules/callsites/index.js
 node_modules/callsites/license
+node_modules/callsites/package.json
+node_modules/callsites/readme.md
+node_modules/chalk/index.d.ts
+node_modules/chalk/license
+node_modules/chalk/package.json
+node_modules/chalk/readme.md
+node_modules/chalk/source/index.js
+node_modules/chalk/source/templates.js
