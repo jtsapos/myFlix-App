@@ -10,7 +10,7 @@ app.use(morgan('common')); //'common' parameter here specifies that all requests
 
 app.use(express.static('public')); //This function automatically routes all requests for static files to their corresponding files within a certain folder on the server (i.e. the “public” folder)
 
-let topMovies = [ //json data about a list of movies which is returned by res.json(topMovies) below in the Get requests
+let topMovies = [ //json data about a list of movies which is returned by app.get('/movies', (req, res) below in the Get requests
     {
       Title: 'Jesus of Nazareth (1977)',
       Director: 'Franco Zeffirelli'
