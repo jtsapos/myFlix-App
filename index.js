@@ -8,8 +8,6 @@ const app = express();      //and constant app = express()
 
 app.use(morgan('common')); //'common' parameter here specifies that all requests should be logged using Morgan’s “common” format, which logs basic data such as IP address, the time of the request, the request method and path, as well as the status code that was sent back as a response.
 
-app.use(express.static('public')); //This function automatically routes all requests for static files to their corresponding files within a certain folder on the server (i.e. the “public” folder)
-
 let topMovies = [ //json data about a list of movies which is returned by app.get('/movies', (req, res) below in the Get requests
     {
       Title: 'Jesus of Nazareth (1977)',
@@ -60,9 +58,7 @@ let topMovies = [ //json data about a list of movies which is returned by app.ge
     res.send('Welcome to myFlix movies club!');
   });
 
-  app.get('/documentation', (req, res) => {                  
-    res.sendFile('public/documentation.html', { root: __dirname });
-  });
+  app.use(express.static('public')); //This function automatically routes all requests for static files to their corresponding files within a certain folder on the server (i.e. the “public” folder)
 
   app.get('/movies', (req, res) => {
     res.json(topMovies);
