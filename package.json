@@ -24,7 +24,7 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
-    "eslint": "^8.9.0"
+    "eslint": "^8.10.0"
   },
   "description": "Json package for myFlix-app"
 }
