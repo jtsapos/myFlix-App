@@ -145,6 +145,8 @@ app.delete('/users/:username', (req,res) => {
   }
 })
 
+app.use(express.static('public')) // This function automatically routes all requests for static files to their corresponding files within a certain folder on the server (i.e. the “public” folder)
+
 
 // “error-handling” middleware functions. They operate in the same way as other middleware functions except: they take four arguments instead of three (err, req, res, next).
 // This code would execute every time an error occurs in your code (that hasn’t already been handled elsewhere). Information about the current error would be logged to the
