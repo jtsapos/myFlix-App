@@ -58,7 +58,7 @@ let topMovies = [ //json data about a list of movies which is returned by app.ge
     res.send('Welcome to myFlix movies club!');
   });
 
-  app.use(express.static('public')); //This function automatically routes all requests for static files to their corresponding files within a certain folder on the server (i.e. the “public” folder)
+    app.use(express.static('public')); //This function automatically routes all requests for static files to their corresponding files within a certain folder on the server (i.e. the “public” folder)
 
   app.get('/movies', (req, res) => {
     res.json(topMovies);
@@ -67,12 +67,12 @@ let topMovies = [ //json data about a list of movies which is returned by app.ge
   //“error-handling” middleware functions. They operate in the same way as other middleware functions except: they take four arguments instead of three (err, req, res, next).
   //This code would execute every time an error occurs in your code (that hasn’t already been handled elsewhere). Information about the current error would be logged to the 
   //terminal using err.stack, which is a property of the error parameter for the middleware function. Error-handling middleware should always be defined last in a chain of middleware,
-  app.use((err, req, res, next) => {
+   app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Error!');
   });
 
   // listen for requests
-app.listen(8080, () => {
+ app.listen(8080, () => {
   console.log('Your app is listening on port 8080.');
 });
