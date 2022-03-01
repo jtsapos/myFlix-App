@@ -48,7 +48,6 @@
                 <td>None</td>
                 <td>A JSON object holding data for the selected movie containing description, genre, director and img
                     URL. Example:
-                    <pre>
                     <code>
                       {
                         Title: '', 
@@ -71,7 +70,6 @@
                       Featured: true
                      }
                     </code>
-                  </pre>
                 </td>
             </tr>
             <tr>
@@ -81,14 +79,12 @@
                 <td>:genre</td>
                 <td>None</td>
                 <td>A JSON object holding data about the selected genre. Example:
-                    <pre>
                     <code>
                     { 
                       name: 'Religious', 
                       description: '', 
                     }
                    </code>
-                 </pre>
                 </td>
             </tr>
             <td>Return data about a director (bio, birth year, death year) by name</td>
@@ -97,8 +93,7 @@
             <td>:name</td>
             <td>None</td>
             <td>A JSON object holding data about the selected director. Example:
-                <pre>
-                    <code>
+                <code>
                      { 
                        name: 'Franco Zeffirelli', 
                        birth: '1968', 
@@ -106,7 +101,6 @@
                        bio: ''
                      }
                     </code>
-                  </pre>
             </td>
             </tr>
             <tr>
@@ -115,8 +109,7 @@
                 <td>POST</td>
                 <td>None</td>
                 <td>A JSON object holding data about the user to add. Example:
-                    <pre>
-                     <code>
+                    <code>
                        { 
                          "username": "johnt", 
                          "email": "johnt@gmail.com", 
@@ -127,12 +120,10 @@
                        ] 
                      }
                     </code>
-                   </pre>
                 </td>
 
                 <td>A JSON object holding data about added user including ID. Example:
-                    <pre>
-                      <code>
+                    <code>
                         { 
                           id: '1',
                           username: 'johnt', 
@@ -144,7 +135,6 @@
                             ] 
                         }
                       </code>
-                   </pre>
                 </td>
             </tr>
 
@@ -154,18 +144,15 @@
                 <td>PUT</td>
                 <td>:username</td>
                 <td> A JSON object holding the new username. Example:
-                    <pre>
-                     <code>
+                    <code>
                        { 
                          "username": "johnts"
                        }
                      </code>
-                   </pre>
                 </td>
 
                 <td>A JSON object with the updated user profile. Example:
-                    <pre>
-                      <code>
+                    <code>
                          { 
                           id: '1',
                           username: 'johnts', 
@@ -177,7 +164,6 @@
                             ] 
                          }
                      </code>
-                  </pre>
                 </td>
             </tr>
 
