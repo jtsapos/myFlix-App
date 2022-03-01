@@ -19,6 +19,195 @@
     <p>personal information, and create a list of their favorite movies.</p>
 
 
+    <table class="table table-hover align-middle">
+        <thead>
+            <tr>
+                <th scope="col">Business Logic</th>
+                <th scope="col">URL</th>
+                <th scope="col">HTTP Method</th>
+                <th scope="col">Query parameters</th>
+                <th scope="col">Request body data format</th>
+                <th scope="col">Response body data format</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>Return a list of ALL movies to the user</td>
+                <td>/movies</td>
+                <td>GET</td>
+                <td>None</td>
+                <td>None</td>
+                <td>A JSON object holding data for all movies</td>
+            </tr>
+            <tr>
+                <td>Return data for a single movie by title to the user</td>
+                <td>/movies/[title]</td>
+                <td>GET</td>
+                <td>:title</td>
+                <td>None</td>
+                <td>A JSON object holding data for the selected movie containing description, genre, director and img
+                    URL. Example:
+                    <pre>
+                    <code>
+                      {
+                        Title: '', 
+                        Description: '',
+                        Year: '', 
+                        Genre: {
+                        name: '',
+                        description: ''
+                      } 
+                       Director: {
+                       name: '', 
+                       birth: '',
+                       death: ''
+                       bio: ''
+                     },
+                      Actors: {
+        
+                     }
+                      ImagePath: ''
+                      Featured: true
+                     }
+                    </code>
+                  </pre>
+                </td>
+            </tr>
+            <tr>
+                <td>Return data about a genre (description) by name/title (e.g., “Thriller”)</td>
+                <td>/movies/genres/[genre]</td>
+                <td>GET</td>
+                <td>:genre</td>
+                <td>None</td>
+                <td>A JSON object holding data about the selected genre. Example:
+                    <pre>
+                    <code>
+                    { 
+                      name: 'Religious', 
+                      description: '', 
+                    }
+                   </code>
+                 </pre>
+                </td>
+            </tr>
+            <td>Return data about a director (bio, birth year, death year) by name</td>
+            <td>/movies/directors/[name]</td>
+            <td>GET</td>
+            <td>:name</td>
+            <td>None</td>
+            <td>A JSON object holding data about the selected director. Example:
+                <pre>
+                    <code>
+                     { 
+                       name: 'Franco Zeffirelli', 
+                       birth: '1968', 
+                       death: '2019',
+                       bio: ''
+                     }
+                    </code>
+                  </pre>
+            </td>
+            </tr>
+            <tr>
+                <td>Allow new users to register</td>
+                <td>/users</td>
+                <td>POST</td>
+                <td>None</td>
+                <td>A JSON object holding data about the user to add. Example:
+                    <pre>
+                     <code>
+                       { 
+                         "username": "johnt", 
+                         "email": "johnt@gmail.com", 
+                         "password": "hellothere"
+                         "birthday": "11/06/1990", 
+                         "favorites": [
+                         "Jesus of Nazareth", "Peter and Paul"
+                       ] 
+                     }
+                    </code>
+                   </pre>
+                </td>
+
+                <td>A JSON object holding data about added user including ID. Example:
+                    <pre>
+                      <code>
+                        { 
+                          id: '1',
+                          username: 'johnt', 
+                          email: 'johnt@gmail.com', 
+                          password: 'hellothere'
+                          birthday: '11/06/1990',
+                          favorites: [
+                         'Jesus of Nazareth', 'Peter and Paul'
+                            ] 
+                        }
+                      </code>
+                   </pre>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Allow users to update their user info (username)</td>
+                <td>/users/[username]</td>
+                <td>PUT</td>
+                <td>:username</td>
+                <td> A JSON object holding the new username. Example:
+                    <pre>
+                     <code>
+                       { 
+                         "username": "johnts"
+                       }
+                     </code>
+                   </pre>
+                </td>
+
+                <td>A JSON object with the updated user profile. Example:
+                    <pre>
+                      <code>
+                         { 
+                          id: '1',
+                          username: 'johnts', 
+                          email: 'johnts@gmail.com', 
+                          password: 'hellothere'
+                          birthday: '11/06/1990', 
+                          favorites: [
+                            'Jesus of Nazareth', 'Peter and Paul'
+                            ] 
+                         }
+                     </code>
+                  </pre>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Allow users to add a movie to their list of favorites</td>
+                <td>/users/[username]/[movie]</td>
+                <td>POST</td>
+                <td>:username, :movie</td>
+                <td>None</td>
+                <td>A text message indicating the movie was added</td>
+            </tr>
+            <tr>
+                <td>Allow users to remove a movie from their list of favorites</td>
+                <td>/users/[username]/[movie]</td>
+                <td>DELETE</td>
+                <td>:username, :movie</td>
+                <td>None</td>
+                <td>A text message indicating the movie was deleted</td>
+            </tr>
+            <tr>
+                <td>Allow existing users to remove their account</td>
+                <td>/users/[username]</td>
+                <td>DELETE</td>
+                <td>:username</td>
+                <td>None</td>
+                <td>A message indicating the user was removed</td>
+            </tr>
+        </tbody>
+    </table>
+
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
