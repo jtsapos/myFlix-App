@@ -8,6 +8,7 @@ uuid = require('uuid');
 
 const app = express() // and constant app = express()
 
+
 app.use(bodyParser.json());
 
 let users =  [
@@ -35,14 +36,16 @@ let movies = [
     director: {
       name: 'Franco Zeffirelli', 
       birth: '1968',
-      death: '-',
+      death: '2019',
       bio: ''
     },
     actors: {
 
     },
-    
+    imgURL: 'https://www.imdb.com/title/tt0075520/fullcredits?ref_=tt_ov_st_sm',
+    featured: true
   }
+  
 ];
 
 app.use(morgan('common')); // 'common' parameter here specifies that all requests should be logged using Morgan’s “common” format, which logs basic data such as IP address, the time of the request, the request method and path, as well as the status code that was sent back as a response.
@@ -55,18 +58,18 @@ app.get('/', (req, res) => {
 });
 
 
-app.get('/movies', (req, res) => {
+app.get('/movies', (req, res) => {  //Return a list of ALL movies to the user (1)
   res.json(movies);
 });
 
-//Responds with a json of the specific movie asked for (2)-
+//Responds with a json of the specific movie asked for (2)
   app.get('/movies/:title', (req, res) => {
     res.json(movies.find((movie) => {
       return movie.title === req.params.title
     }));
   });
 
-  //Responds with a json of all movies within specified genre (3)-
+  //Responds with a json of all movies within specified genre (3)
 app.get('/movies/genres/:genre', (req, res) => {
   const genre = movies.find((movie) => movie.genre.name === req.params.genre).genre;
   if (genre) {
@@ -76,7 +79,7 @@ app.get('/movies/genres/:genre', (req, res) => {
   }
 });
 
-//Responds with a json with all information about the specified director (4)-
+//Responds with a json with all information about the specified director (4)
 app.get('/movies/directors/:name', (req, res) => {
   const director = movies.find((movie) => movie.director.name === req.params.name).director;
   if (director) {
@@ -86,7 +89,7 @@ app.get('/movies/directors/:name', (req, res) => {
   }
 });
 
-//Creates a user in the platform (5)-
+//Creates a user in the platform (5)
 app.post('/users', (req, res) => {
   const newUser = req.body;
   if (newUser.username) {
@@ -99,7 +102,7 @@ app.post('/users', (req, res) => {
   }
 });
 
-//Changes user's username (6)-
+//Changes user's username (6)
 app.put('/users/:username', (req, res) => {
   const newUsername = req.body;
   let user = users.find((user) => { return user.username === req.params.username });
@@ -111,7 +114,7 @@ app.put('/users/:username', (req, res) => {
   }
 });
 
-//Adds a movie to user's favorites list (7)-
+//Adds a movie to user's favorites list (7)
 app.post('/users/:username/:movie', (req, res) => {
   let user = users.find((user) => { return user.username === req.params.username });
   if (user) {
@@ -122,7 +125,7 @@ app.post('/users/:username/:movie', (req, res) => {
   }
 });
 
-//Removes a movie from user's favorites list (8)-
+//Removes a movie from user's favorites list (8)
 app.delete('/users/:username/:movie', (req,res) => {
   let user = users.find((user) => { return user.username === req.params.username });
   
@@ -134,7 +137,7 @@ app.delete('/users/:username/:movie', (req,res) => {
   }
 });
 
-//Deletes user (9)-
+//Deletes user (9)
 app.delete('/users/:username', (req,res) => {
   let user = users.find((user) => { return user.username === req.params.username });
   if (user) {
