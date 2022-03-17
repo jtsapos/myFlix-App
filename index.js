@@ -198,7 +198,7 @@ app.post('/Users/:Username/movies/:MovieID', (req, res) => {
 });
 
 // DELETE: Allow users to remove a movie from their list of favorites
-app.delete('/users/:Username/movies/:MovieID', (req, res) => {
+app.delete('/Users/:Username/movies/:MovieID', (req, res) => {
   Users.findOneAndUpdate({Username : req.params.Username}, // Find user by username
     {$pull: { FavoriteMovies: req.params.MovieID}}, // Remove movie from the list
     { new : true }) // Return the updated document
@@ -210,7 +210,6 @@ app.delete('/users/:Username/movies/:MovieID', (req, res) => {
       res.status(500).send('Error: ' + err);
     });
 });
-
 
 // Delete a user by username (Allow user to deregister)
 app.delete('/Users/:Username', (req, res) => {
