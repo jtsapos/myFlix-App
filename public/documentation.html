@@ -51,35 +51,34 @@
             <td>none</td>
             <td>A JSON object holding data about a single movie. Example:<br>
                 <pre>
-          {
-            "_id" : ObjectId("622b920543c13a88c1351c85"),
-            "Title": "Jesus of Nazareth",
-            "Description": "Beginning before the Nativity and extending through the Crucifixion and 
-            Resurrection, this mini-series brings to life all of the sweeping drama in the life of 
-            Jesus Christ, as told by the Gospels and His disciples.",
-            "Genre": {
+                {
+                "Genre": {
                 "Name": "Drama",
-                "Description": "Drama Films are serious presentations with settings or life situations. 
-                Drama films portray realistic characters in conflict with either themselves, others, 
-                or forces of nature. A dramatic film shows human beings at their best, their worst, 
+                "Description": "Drama Films are serious presentations with settings or life situations.
+                Drama films portray realistic characters in conflict with either themselves, others,
+                or forces of nature. A dramatic film shows human beings at their best, their worst,
                 and everything in-between."
-            },
-            "Director": {
+                },
+                "Director": {
                 "Name": "Franco Zeffireli",
-                "Bio": "Franco Zeffirelli was an Italian born producer and director. He was best known 
+                "Bio": "Franco Zeffirelli was an Italian born producer and director. He was best known
                 for his Drama mini-series Jesus of Nazareth and the film Romeo and Juliet.""
                 "Birthday": "1923-02-12T00:00:00.000Z"
-            },
-            "ImagePath": "JesusofNazareth.png",
-            "Actors": [ "Robert Powell",
-            "Anne Bancroft",
-            "Ernest Borgnine",
-            "Claudia Cardinale",
-            "James Farentino"],
-            
-            "Featured": true
-          }
-          </pre>
+                },
+                "Actors": [ "Robert Powell",
+                "Anne Bancroft",
+                "Ernest Borgnine",
+                "Claudia Cardinale",
+                "James Farentino"],
+                "_id" : ObjectId("622b920543c13a88c1351c85"),
+                "Title": "Jesus of Nazareth",
+                "Description": "Beginning before the Nativity and extending through the Crucifixion and
+                Resurrection, this mini-series brings to life all of the sweeping drama in the life of
+                Jesus Christ, as told by the Gospels and His disciples.",
+                "ImagePath": "JesusofNazareth.png",
+                "Featured": true
+                }
+               </pre>
             </td>
         </tr>
         <tr>
@@ -110,7 +109,7 @@
             "Name": "Franco Zeffireli",
             "Bio": "Franco Zeffirelli was an Italian born producer and director. He was best known for 
             his Drama mini-series Jesus of Nazareth and the film Romeo and Juliet.""
-            "Birthday": ISODate("1923-02-12T00:00:00.000Z")
+            "Birthday": "1923-02-12T00:00:00.000Z"
           }
           </pre>
             </td>
@@ -132,12 +131,14 @@
             <td>A JSON object holding the newly created user, including ObjectId. Example:<br>
                 <pre>
           {
-            "_id" : ObjectId("622cf87d9367be5ae9d75ee5"),  
+              
             "Username": "johnsmith",
             "Password": "test123",
             "Email": "johnsmith@gmail.com",
-            "Birthday": ISODate("1985-02-19T00:00:00Z"),
-            "FavoriteMovies": []
+            "Birthday": "1985-02-19T00:00:00Z",
+            "FavoriteMovies": [],
+            "_id" : ObjectId("622cf87d9367be5ae9d75ee5"),
+            "__v": 0
           }
           </pre>
             </td>
