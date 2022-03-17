@@ -1,54 +1,30 @@
-
 // As a server-side web framework for Node.js., Express is used to create and maintain web servers as well as manage HTTP requests.
 // Rather than using modules (e.g., the HTTP module), you can simply use Express to route requests/responses and interact with request data
-const express = require('express'), // install Express using npm and then import the module declaring "const express"
+
+//Load Express Framework
+const express = require('express') // install Express using npm and then import the module declaring "const express"
+const app = express(); // and constant app = express()
+
+// Import middleware libraries: Morgan, body-parser, and uuid
+const morgan = require('morgan'), // Morgan (logging middleware for Express) is first imported locally (the line const morgan = require('morgan');), then passed into the app.use() function below:
 bodyParser = require('body-parser'),
-morgan = require('morgan'), // Morgan (logging middleware for Express) is first imported locally (the line const morgan = require('morgan');), then passed into the app.use() function below:
 uuid = require('uuid'); 
 
-const app = express() // and constant app = express()
-
-
+// Use body-parser middleware function
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-let users =  [
-  {
-    username: 'johnt',
-    email: 'johnt@gmail.com',
-    password: 'hellothere',
-    birthday: '11/06/1990',
-    favorites: [
-      'Jesus of Nazareth',
-      'Peter and Paul',
-      'The Shawshank Redemption'
-    ]
- 
-  }
-]
-let movies = [
-  {
-    name: 'Jesus of Nazareth', 
-    title: 'Jesus of Nazareth', 
-    year: '1977', 
-    genre: {
-      name: 'Religious',
-      description: 'Religious films are generally drama that provokes spiritual and psychological emotions. '
-    }, 
-    director: {
-      name: 'Franco Zeffirelli', 
-      birth: '1968',
-      death: '2019',
-      bio: ''
-    },
-    actors: {
+// Import Mongoose, models.js and respective models
+const mongoose = require('mongoose');
+const Models = require('./models.js');
+const Movies = Models.Movie;
+const Users = Models.User;
 
-    },
-    imgURL: 'https://www.imdb.com/title/tt0075520/fullcredits?ref_=tt_ov_st_sm',
-    featured: true
-  }
-  
-];
+/* Connecting to MongoDB myFlixDB */
+// a) Connect to Local DB
+mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
+// Log basic request data in terminal using Morgan middleware library
 app.use(morgan('common')); // 'common' parameter here specifies that all requests should be logged using Morgan’s “common” format, which logs basic data such as IP address, the time of the request, the request method and path, as well as the status code that was sent back as a response.
 
 // GET Requests-These three app.get requests define the different URLs that requests can be sent to (also called endpoints or routes), as well as the different responses
@@ -59,103 +35,208 @@ app.get('/', (req, res) => {
 });
 
 
-app.get('/movies', (req, res) => {  //Return a list of ALL movies to the user (1)
-  res.json(movies);
+// READ: Return a list of ALL movies to the user
+app.get('/movies', (req, res) => {
+  Movies.find()
+    .then((movies) => {
+      res.status(200).json(movies);
+    })
+    .catch((err) => {
+      res.status(500).send('Error: '+ err);
+    });
 });
 
-//Responds with a json of the specific movie asked for (2)
-  app.get('/movies/:title', (req, res) => {
-    res.json(movies.find((movie) => {
-      return movie.title === req.params.title
-    }));
+// READ: Return data (description, genre, director, image URL, whether it’s featured or not) about a single movie by title to the user
+app.get('/movies/:title', (req, res) => {
+  Movies.findOne({ Title: req.params.title}) // Find the movie by title
+    .then((movie) => {
+      if(movie){ // If movie was found, return json, else throw error
+        res.status(200).json(movie);
+      } else {
+        res.status(400).send('Movie not found');
+      }
+    })
+    .catch((err) => {
+      res.status(500).send('Error: '+ err);
+    });
+});
+
+// READ: Return data about a genre (description) by name/title (e.g., “Drama”)
+app.get('/movies/genre/:Name', (req, res) => {
+  Movies.findOne({ 'Genre.Name': req.params.Name}) // Find one movie with the genre by genre name
+    .then((movie) => {
+      if(movie){ // If a movie with the genre was found, return json of genre info, else throw error
+        res.status(200).json(movie.Genre);
+      } else {
+        res.status(400).send('Genre not found');
+      }
+    })
+    .catch((err) => {
+      res.status(500).send('Error: '+ err);
+    });
+});
+
+// READ: Return data about a director (bio, birth year, death year) by name
+app.get('/movies/director/:Name', (req, res) => {
+  Movies.findOne({ 'Director.Name': req.params.Name}) // Find one movie with the director by name
+    .then((movie) => {
+      if(movie){ // If a movie with the director was found, return json of director info, else throw error
+        res.status(200).json(movie.Director);
+      } else {
+        res.status(400).send('Director not found');
+      }
+    })
+    .catch((err) => {
+      res.status(500).send('Error: '+ err);
+    });
+});
+
+// Get all users
+app.get('/Users', (req, res) => {
+  Users.find()
+    .then((users) => {
+      res.status(201).json(users);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
+
+
+// Get a user by username
+app.get('/Users/:Username', (req, res) => {
+  Users.findOne({ Username: req.params.Username })
+    .then((user) => {
+      res.json(user);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
+
+//Add a user
+/* We’ll expect JSON in this format
+{
+  ID: Integer,
+  Username: String,
+  Password: String,
+  Email: String,
+  Birthday: Date
+}*/
+app.post('/Users', (req, res) => {
+  Users.findOne({ Username: req.body.Username })
+    .then((user) => {
+      if (user) {
+        return res.status(400).send(req.body.Username + 'already exists');
+      } else {
+        Users
+          .create({
+            Username: req.body.Username,
+            Password: req.body.Password,
+            Email: req.body.Email,
+            Birthday: req.body.Birthday
+          })
+          .then((user) =>{res.status(201).json(user) })
+        .catch((error) => {
+          console.error(error);
+          res.status(500).send('Error: ' + error);
+        })
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send('Error: ' + error);
+    });
+});
+
+// Allow users to Update a user's info, by username
+/* We’ll expect JSON in this format
+{
+  Username: String,
+  (required)
+  Password: String,
+  (required)
+  Email: String,
+  (required)
+  Birthday: Date
+}*/
+app.put('/Users/:Username', (req, res) => {
+  Users.findOneAndUpdate({ Username: req.params.Username }, { $set:
+    {
+      Username: req.body.Username,
+      Password: req.body.Password,
+      Email: req.body.Email,
+      Birthday: req.body.Birthday
+    }
+  },
+  { new: true }, // This line makes sure that the updated document is returned
+  (err, updatedUser) => {
+    if(err) {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    } else {
+      res.json(updatedUser);
+    }
   });
-
-  //Responds with a json of all movies within specified genre (3)
-app.get('/movies/genres/:genre', (req, res) => {
-  const genre = movies.find((movie) => movie.genre.name === req.params.genre).genre;
-  if (genre) {
-    res.status(200).json(genre);
-  } else {
-    res.status(404).send('Genre not found.');
-  }
 });
 
-//Responds with a json with all information about the specified director (4)
-app.get('/movies/directors/:name', (req, res) => {
-  const director = movies.find((movie) => movie.director.name === req.params.name).director;
-  if (director) {
-    res.status(200).json(director);
-  } else {
-    res.status(404).send('Director not found.')
-  }
+// Add a movie to a user's list of favorites
+app.post('/Users/:Username/movies/:MovieID', (req, res) => {
+  Users.findOneAndUpdate({ Username: req.params.Username }, { // Find user by username
+     $push: { FavoriteMovies: req.params.MovieID } // Add movie to the list
+   },
+   { new: true }) // Returns the updated document
+      .then((updatedUser) => {
+      res.json(updatedUser); // Return json object of updatedUser
+  })
+  .catch((err) => {
+    console.error(err);
+    res.status(500).send('Error: ' + err);
+  });
 });
 
-//Creates a user in the platform (5)
-app.post('/users', (req, res) => {
-  const newUser = req.body;
-  if (newUser.username) {
-    newUser.id = uuid.v4();
-    users.push(newUser);
-    res.status(201).json(newUser);
-  } else {
-    const message = 'Missing username in request';
-    res.status(400).send(message);
-  }
+// DELETE: Allow users to remove a movie from their list of favorites
+app.delete('/users/:Username/movies/:MovieID', (req, res) => {
+  Users.findOneAndUpdate({Username : req.params.Username}, // Find user by username
+    {$pull: { FavoriteMovies: req.params.MovieID}}, // Remove movie from the list
+    { new : true }) // Return the updated document
+    .then((updatedUser) => {
+        res.json(updatedUser); // Return json object of updatedUser
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
-//Changes user's username (6)
-app.put('/users/:username', (req, res) => {
-  const newUsername = req.body;
-  let user = users.find((user) => { return user.username === req.params.username });
-  if (user) {
-    user.username = newUsername.username;
-    res.status(201).json(user)
-  } else {
-    res.status(404).send('User not found.')
-  }
+
+// Delete a user by username (Allow user to deregister)
+app.delete('/Users/:Username', (req, res) => {
+  Users.findOneAndRemove({ Username: req.params.Username }) // Find user by username
+    .then((user) => {
+      if (!user) {
+        res.status(400).send(req.params.Username + ' was not found');
+      } else 
+        res.status(200).send(req.params.Username + ' was deleted.');
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
-//Adds a movie to user's favorites list (7)
-app.post('/users/:username/:movie', (req, res) => {
-  let user = users.find((user) => { return user.username === req.params.username });
-  if (user) {
-    user.favorites.push(req.params.movie);
-    res.status(200).send(req.params.movie + ' was added to ' + user.username + '\'s favorites list.');
-  } else {
-    res.status(404).send('User not found.');
-  }
-});
 
-//Removes a movie from user's favorites list (8)
-app.delete('/users/:username/:movie', (req,res) => {
-  let user = users.find((user) => { return user.username === req.params.username });
-  
-  if (user) {
-    user.favorites = user.favorites.filter((mov) => { return mov !== req.params.movie });
-    res.status(200).send(req.params.movie + ' was removed from ' + user.username + '\'s favorites list.');
-  } else {
-    res.status(404).send('User not found.')
-  }
-});
-
-//Deletes user (9)
-app.delete('/users/:username', (req,res) => {
-  let user = users.find((user) => { return user.username === req.params.username });
-  if (user) {
-    users = users.filter((user) => { return user.username !== req.params.username });
-    res.status(201).send(req.params.username + ' was deleted.');
-  } else {
-    res.status(404).send('User not found.')
-  }
-})
-
+// Serve static content for the app from the 'public' directory
 app.use(express.static('public')) // This function automatically routes all requests for static files to their corresponding files within a certain folder on the server (i.e. the “public” folder)
 
 
 // “error-handling” middleware functions. They operate in the same way as other middleware functions except: they take four arguments instead of three (err, req, res, next).
 // This code would execute every time an error occurs in your code (that hasn’t already been handled elsewhere). Information about the current error would be logged to the
 // terminal using err.stack, which is a property of the error parameter for the middleware function. Error-handling middleware should always be defined last in a chain of middleware,
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
   console.error(err.stack)
   res.status(500).send('Error!')
 })
@@ -164,3 +245,4 @@ app.use((err, req, res) => {
 app.listen(8080, () => {
   console.log('Your app is listening on port 8080.')
 })
+
