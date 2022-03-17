@@ -10,190 +10,187 @@
     <!--<link href="dist/minified-css/styles.css" rel="stylesheet" type="text/css"/>-->
     <!--<link rel="stylesheet" type="text/css" href="css/styles.css">-->
     <title>myFlix Documentation</title>
+    <style>
+        table,
+        th,
+        td {
+            border: 2px solid rgb(68, 2, 2);
+        }
+    </style>
 </head>
 
-<body class="container">
-    <h1 class="h1">myFlix</h1>
-    <p>myFlix Provides users with access to information about different</p>
+<body>
+    <h1 class="h1">myFlix Movie API</h1>
+    <p>myFlix Movie API provides users with access to information about different</p>
     <p>movies, directors, and genres. Users will be able to register, update their</p>
     <p>personal information, and create a list of their favorite movies.</p>
 
-
-    <table class="table table-hover align-middle">
-        <thead>
-            <tr>
-                <th scope="col">Business Logic</th>
-                <th scope="col">URL</th>
-                <th scope="col">HTTP Method</th>
-                <th scope="col">Query parameters</th>
-                <th scope="col">Request body data format</th>
-                <th scope="col">Response body data format</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            <tr>
-                <td>Return a list of ALL movies to the user</td>
-                <td>/movies</td>
-                <td>GET</td>
-                <td>None</td>
-                <td>None</td>
-                <td>A JSON object holding data for all movies</td>
-            </tr>
-            <tr>
-                <td>Return data for a single movie by title to the user</td>
-                <td>/movies/[title]</td>
-                <td>GET</td>
-                <td>:title</td>
-                <td>None</td>
-                <td>A JSON object holding data for the selected movie containing description, genre, director and img
-                    URL. Example:
-                    <code>
-                      {
-                        Title: '', 
-                        Description: '',
-                        Year: '', 
-                        Genre: {
-                        name: '',
-                        description: ''
-                      } 
-                       Director: {
-                       name: '', 
-                       birth: '',
-                       death: ''
-                       bio: ''
-                     },
-                      Actors: {
-        
-                     }
-                      ImagePath: ''
-                      Featured: true
-                     }
-                    </code>
-                </td>
-            </tr>
-            <tr>
-                <td>Return data about a genre (description) by name/title (e.g., “Thriller”)</td>
-                <td>/movies/genres/[genre]</td>
-                <td>GET</td>
-                <td>:genre</td>
-                <td>None</td>
-                <td>A JSON object holding data about the selected genre. Example:
-                    <code>
-                    { 
-                      name: 'Religious', 
-                      description: '', 
-                    }
-                   </code>
-                </td>
-            </tr>
-            <td>Return data about a director (bio, birth year, death year) by name</td>
-            <td>/movies/directors/[name]</td>
+    <br><br>
+    <h3>URL requests and endpoints</h3>
+    <br>
+    <table style="width:100%">
+        <tr>
+            <th>Client Request</th>
+            <th>URL</th>
+            <th>HTTP Method</th>
+            <th>Request Body Data Format</th>
+            <th>Response Body Data Format</th>
+        </tr>
+        <tr>
+            <td>Return a list of ALL movies to the user</td>
+            <td>/movies</td>
             <td>GET</td>
-            <td>:name</td>
-            <td>None</td>
-            <td>A JSON object holding data about the selected director. Example:
-                <code>
-                     { 
-                       name: 'Franco Zeffirelli', 
-                       birth: '1968', 
-                       death: '2019',
-                       bio: ''
-                     }
-                    </code>
+            <td>none</td>
+            <td>A JSON object holding data about all the movies</td>
+        </tr>
+        <tr>
+            <td>Return data (description, genre, director, image URL, whether it’s featured or not) about a single movie
+                by title to the user</td>
+            <td>/movies/:title</td>
+            <td>GET</td>
+            <td>none</td>
+            <td>A JSON object holding data about a single movie. Example:<br>
+                <pre>
+          {
+            "_id" : ObjectId("622b920543c13a88c1351c85"),
+            "Title": "Jesus of Nazareth",
+            "Description": "Beginning before the Nativity and extending through the Crucifixion and 
+            Resurrection, this mini-series brings to life all of the sweeping drama in the life of 
+            Jesus Christ, as told by the Gospels and His disciples.",
+            "Genre": {
+                "Name": "Drama",
+                "Description": "Drama Films are serious presentations with settings or life situations. 
+                Drama films portray realistic characters in conflict with either themselves, others, 
+                or forces of nature. A dramatic film shows human beings at their best, their worst, 
+                and everything in-between."
+            },
+            "Director": {
+                "Name": "Franco Zeffireli",
+                "Bio": "Franco Zeffirelli was an Italian born producer and director. He was best known 
+                for his Drama mini-series Jesus of Nazareth and the film Romeo and Juliet.""
+                "Birthday": "1923-02-12T00:00:00.000Z"
+            },
+            "ImagePath": "JesusofNazareth.png",
+            "Actors": [ "Robert Powell",
+            "Anne Bancroft",
+            "Ernest Borgnine",
+            "Claudia Cardinale",
+            "James Farentino"],
+            
+            "Featured": true
+          }
+          </pre>
             </td>
-            </tr>
-            <tr>
-                <td>Allow new users to register</td>
-                <td>/users</td>
-                <td>POST</td>
-                <td>None</td>
-                <td>A JSON object holding data about the user to add. Example:
-                    <code>
-                       { 
-                         "username": "johnt", 
-                         "email": "johnt@gmail.com", 
-                         "password": "hellothere"
-                         "birthday": "11/06/1990", 
-                         "favorites": [
-                         "Jesus of Nazareth", "Peter and Paul"
-                       ] 
-                     }
-                    </code>
-                </td>
-
-                <td>A JSON object holding data about added user including ID. Example:
-                    <code>
-                        { 
-                          id: '1',
-                          username: 'johnt', 
-                          email: 'johnt@gmail.com', 
-                          password: 'hellothere'
-                          birthday: '11/06/1990',
-                          favorites: [
-                         'Jesus of Nazareth', 'Peter and Paul'
-                            ] 
-                        }
-                      </code>
-                </td>
-            </tr>
-
-            <tr>
-                <td>Allow users to update their user info (username)</td>
-                <td>/users/[username]</td>
-                <td>PUT</td>
-                <td>:username</td>
-                <td> A JSON object holding the new username. Example:
-                    <code>
-                       { 
-                         "username": "johnts"
-                       }
-                     </code>
-                </td>
-
-                <td>A JSON object with the updated user profile. Example:
-                    <code>
-                         { 
-                          id: '1',
-                          username: 'johnts', 
-                          email: 'johnts@gmail.com', 
-                          password: 'hellothere'
-                          birthday: '11/06/1990', 
-                          favorites: [
-                            'Jesus of Nazareth', 'Peter and Paul'
-                            ] 
-                         }
-                     </code>
-                </td>
-            </tr>
-
-            <tr>
-                <td>Allow users to add a movie to their list of favorites</td>
-                <td>/users/[username]/[movie]</td>
-                <td>POST</td>
-                <td>:username, :movie</td>
-                <td>None</td>
-                <td>A text message indicating the movie was added</td>
-            </tr>
-            <tr>
-                <td>Allow users to remove a movie from their list of favorites</td>
-                <td>/users/[username]/[movie]</td>
-                <td>DELETE</td>
-                <td>:username, :movie</td>
-                <td>None</td>
-                <td>A text message indicating the movie was deleted</td>
-            </tr>
-            <tr>
-                <td>Allow existing users to remove their account</td>
-                <td>/users/[username]</td>
-                <td>DELETE</td>
-                <td>:username</td>
-                <td>None</td>
-                <td>A message indicating the user was removed</td>
-            </tr>
-        </tbody>
+        </tr>
+        <tr>
+            <td>Return data about a genre (description) by name/title (e.g., “Thriller”)</td>
+            <td>/movies/genre/:Name</td>
+            <td>GET</td>
+            <td>none</td>
+            <td>A JSON object holding data about a genre. Example:<br>
+                <pre>
+          {
+            "Name": "Adventure",
+            "Description": "Adventure is a film genre in which the protagonist is thrust into a series of 
+            events that typically involve violence and physical feats. The genre tends to feature a mostly 
+            resourceful hero struggling against incredible odds, which include life-threatening situations, 
+            a dangerous villain, or a pursuit which usually concludes in victory for the hero."
+          }
+          </pre>
+            </td>
+        </tr>
+        <tr>
+            <td>Return data about a director (bio, birth year, death year) by name</td>
+            <td>/movies/director/:Name</td>
+            <td>GET</td>
+            <td>none</td>
+            <td>A JSON object holding data about a director. Example:<br>
+                <pre>
+          {
+            "Name": "Franco Zeffireli",
+            "Bio": "Franco Zeffirelli was an Italian born producer and director. He was best known for 
+            his Drama mini-series Jesus of Nazareth and the film Romeo and Juliet.""
+            "Birthday": ISODate("1923-02-12T00:00:00.000Z")
+          }
+          </pre>
+            </td>
+        </tr>
+        <tr>
+            <td>Allow new users to register</td>
+            <td>/users</td>
+            <td>POST</td>
+            <td>A JSON object holding the user information. Example:<br>
+                <pre>
+          {
+            "Username": "johnsmith",
+            "Email": "johnsmith@gmail.com",
+            "Password" "test123",
+            "Birthday": "02.19.1985"
+          }
+          </pre>
+            </td>
+            <td>A JSON object holding the newly created user, including ObjectId. Example:<br>
+                <pre>
+          {
+            "_id" : ObjectId("622cf87d9367be5ae9d75ee5"),  
+            "Username": "johnsmith",
+            "Password": "test123",
+            "Email": "johnsmith@gmail.com",
+            "Birthday": ISODate("1985-02-19T00:00:00Z"),
+            "FavoriteMovies": []
+          }
+          </pre>
+            </td>
+        </tr>
+        <tr>
+            <td>Return a list of all users</td>
+            <td>/users</td>
+            <td>GET</td>
+            <td>none</td>
+            <td>A JSON object holding data about all users</td>
+        </tr>
+        <tr>
+            <td>Return data on a single user by username</td>
+            <td>/users/:Username</td>
+            <td>GET</td>
+            <td>none</td>
+            <td>A JSON object holding data about the requested user</td>
+        </tr>
+        <tr>
+            <td>Allow users to update their user info</td>
+            <td>/users/:Username</td>
+            <td>PUT</td>
+            <td>A JSON object holding the information that should be updated. Example:<br>
+                <pre>
+          {
+            "Password": "test123"
+          }
+          </pre>
+            </td>
+            <td>A JSON object holding data about the updated user</td>
+        </tr>
+        <tr>
+            <td>Allow users to add a movie to their list of favorites</td>
+            <td>/users/:Username/movies/:MovieID</td>
+            <td>POST</td>
+            <td>none</td>
+            <td>A JSON object holding data about the updated user</td>
+        </tr>
+        <tr>
+            <td>Allow users to remove a movie from their list of favorites</td>
+            <td>/users/:Username/movies/:MovieID</td>
+            <td>DELETE</td>
+            <td>none</td>
+            <td>A JSON object holding data about the updated user</td>
+        </tr>
+        <tr>
+            <td>Allow existing users to deregister</td>
+            <td>/users/:Username</td>
+            <td>DELETE</td>
+            <td>none</td>
+            <td>A success message indicating that the profile was successfully deleted.</td>
+        </tr>
     </table>
-
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
