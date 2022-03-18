@@ -20,6 +20,13 @@ const Models = require('./models.js');
 const Movies = Models.Movie;
 const Users = Models.User;
 
+// Import auth.js file
+let auth = require('./auth')(app); //the app argument you're passing here ensures that Express is available in your “auth.js” file as well.
+
+// Require passport module & import passport.js file
+const passport = require('passport');
+require('./passport');
+
 /* Connecting to MongoDB myFlixDB */
 // a) Connect to Local DB
 mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
@@ -36,7 +43,7 @@ app.get('/', (req, res) => {
 
 
 // READ: Return a list of ALL movies to the user
-app.get('/movies', (req, res) => {
+app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => { //Now, any request to the “movies” endpoint will require a JWT from the client. The JWT will be decoded and checked by the JWT authentication strategy in Passport.js, which will authenticate the request.
   Movies.find()
     .then((movies) => {
       res.status(200).json(movies);
