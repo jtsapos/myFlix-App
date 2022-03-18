@@ -41,7 +41,35 @@
             <td>/movies</td>
             <td>GET</td>
             <td>none</td>
-            <td>A JSON object holding data about all the movies</td>
+            <td>A JSON object holding data about all the movies. Example:<br>
+                <pre>
+                    [
+                    {
+                        "Genre": {
+                            "Name": "Thriller",
+                            "Description": "Thriller film, also known as suspense film or suspense thriller, 
+                            is a broad genre that involves excitement and suspense in the audience."
+                        },
+                        "Director": {
+                            "Name": "Jonathan Demme",
+                            "Bio": "Robert Jonathan Demme was an American director, producer and screenwriter.",
+                            "Birth": "1944",
+                            "Death": "2017"
+                        },
+                        "_id": "622a53fe6335d3aca6a3ee81",
+                        "Title": "Silence of the Lambs",
+                        "Description": "A young FBI cadet must receive the help of an incarcerated and manipulative 
+                        cannibal killer to help catch another serial killer.",
+                        "ImagePath": null,
+                        "Featured": true,
+                        "Actors": [
+                            "Anthony Hopkins",
+                            "Jodie Foster",
+                            "Lawrence A. Bonney"
+                        ]
+                    }, ......]
+                   </pre>
+            </td>
         </tr>
         <tr>
             <td>Return data (description, genre, director, image URL, whether it’s featured or not) about a single movie
@@ -148,14 +176,50 @@
             <td>/users</td>
             <td>GET</td>
             <td>none</td>
-            <td>A JSON object holding data about all users</td>
+            <td>A JSON object holding data about all users. Example:<br>
+                <pre>
+                    [ {
+                        "_id": "623239d3fbb40d5bc4667ab7",
+                        "Username": "testuser1234",
+                        "Password": "123456",
+                        "Email": "testuser1234@gmail.com",
+                        "Birthday": "1953-09-02T04:00:00.000Z",
+                        "FavoriteMovies": [],
+                        "__v": 0
+                    },
+                    {
+                        "_id": "62324a4ffbb40d5bc4667acd",
+                        "Username": "tobias123",
+                        "Password": "password123",
+                        "Email": "tobias@gmail.com",
+                        "Birthday": "1978-02-04T05:00:00.000Z",
+                        "FavoriteMovies": [],
+                        "__v": 0
+                    }, .....]
+                </pre>
+            </td>
         </tr>
         <tr>
             <td>Return data on a single user by username</td>
             <td>/users/:Username</td>
             <td>GET</td>
             <td>none</td>
-            <td>A JSON object holding data about the requested user</td>
+            <td>A JSON object holding data about the requested user. Example:<br>
+                <pre>
+                    {
+                        "_id": "6232681afbb40d5bc4667adc",
+                        "Username": "mary230",
+                        "Password": "password230",
+                        "Email": "mary230@gmail.com",
+                        "FavoriteMovies": [
+                            "622bbdb243c13a88c1351c8b",
+                            "622bcc009367be5ae9d75ed8",
+                            "622bc81c9367be5ae9d75ed7"
+                        ],
+                        "__v": 0
+                    }
+                </pre>
+            </td>
         </tr>
         <tr>
             <td>Allow users to update their user info</td>
@@ -164,18 +228,44 @@
             <td>A JSON object holding the information that should be updated. Example:<br>
                 <pre>
           {
-            "Password": "test123"
+            "Username": "thomas231"
           }
           </pre>
             </td>
-            <td>A JSON object holding data about the updated user</td>
+            <td>A JSON object holding data about the updated user. Example:<br>
+                <pre>
+                    {
+                        "_id": "62324f28fbb40d5bc4667ad2",
+                        "Username": "thomas231",
+                        "Password": "password233",
+                        "Email": "thomas233@gmail.com",
+                        "FavoriteMovies": [],
+                        "__v": 0
+                    }
+                </pre>
+            </td>
         </tr>
         <tr>
             <td>Allow users to add a movie to their list of favorites</td>
             <td>/users/:Username/movies/:MovieID</td>
             <td>POST</td>
             <td>none</td>
-            <td>A JSON object holding data about the updated user</td>
+            <td>A JSON object holding data about the updated user. Example:<br>
+                <pre>
+                    {
+                        "_id": "6232681afbb40d5bc4667adc",
+                        "Username": "mary230",
+                        "Password": "password230",
+                        "Email": "mary230@gmail.com",
+                        "FavoriteMovies": [
+                            "622bbdb243c13a88c1351c8b",
+                            "622bcc009367be5ae9d75ed8",
+                            "622bc81c9367be5ae9d75ed7"
+                        ],
+                        "__v": 0
+                    }
+                </pre>
+            </td>
         </tr>
         <tr>
             <td>Allow users to remove a movie from their list of favorites</td>
@@ -189,7 +279,11 @@
             <td>/users/:Username</td>
             <td>DELETE</td>
             <td>none</td>
-            <td>A success message indicating that the profile was successfully deleted.</td>
+            <td>A success message indicating that the profile was successfully deleted. Example:<br>
+                <pre><br>
+                    thomas23 was deleted.
+                </pre>
+            </td>
         </tr>
     </table>
 
