@@ -272,7 +272,21 @@
             <td>/users/:Username/movies/:MovieID</td>
             <td>DELETE</td>
             <td>none</td>
-            <td>A JSON object holding data about the updated user</td>
+            <td>A JSON object holding data about the updated user. Example<br>
+                <pre>
+                {
+                    "_id": "6232681afbb40d5bc4667adc",
+                    "Username": "mary230",
+                    "Password": "password230",
+                    "Email": "mary230@gmail.com",
+                    "FavoriteMovies": [
+                        "622bbdb243c13a88c1351c8b",
+                        "622bc81c9367be5ae9d75ed7"
+                    ],
+                    "__v": 0
+                }
+                </pre>
+            </td>
         </tr>
         <tr>
             <td>Allow existing users to deregister</td>
