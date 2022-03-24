@@ -21,6 +21,14 @@ passport.use(new LocalStrategy ({ //“LocalStrategy,” defines your basic HTTP
             console.log('incorrect username');
             return callback(null, false, {message: 'Incorrect username or password.'}); //if the username can’t be found within the database, an error message is passed to the callback:
         }
+
+        //Hashes any password entered by the user when logging in before comparing it to the password stored in MongoDB 
+        //validate any password a user enters. 
+        if (!user.validatePassword(password)) { //This is why validatePassword in user.validatePassword(password) will have 
+            //its 'this' value (pay attention to this.password in models.js) referring to the actual user document rather than userSchema.methods(from models.js).
+           console.log('incorrect password');
+           return callback(null, false, {message: 'Incorrect password.'});
+          }
         console.log('finished');
     return callback(null, user);
     });
