@@ -20,6 +20,26 @@ const Models = require('./models.js');
 const Movies = Models.Movie;
 const Users = Models.User;
 
+// Import and use CORS, set allowed origins
+const cors = require('cors');
+app.use(cors());
+
+let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){ // If origin is not included in list of allowedOrigins
+      let message = 'The CORS policy for this application doesn\'t allow access from origin ' + origin;
+      return callback(new Error(message), false);
+    }
+    return callback(null, true);
+  }
+}));
+
+// Import express-validator to validate input fields
+const {check, validationResult} = require('express-validator');
+
 // Import auth.js file
 let auth = require('./auth')(app); //the app argument you're passing here ensures that Express is available in your “auth.js” file as well.
 
@@ -98,8 +118,55 @@ app.get('/movies/director/:Name', passport.authenticate('jwt', { session: false 
     });
 });
 
+// CREATE: Allow new users to register, no jwt authentication needed!
+// Username, Password & Email are required fields!
+app.post('/users',
+// Validation logic
+[
+  check('Username', 'Username is required (min 3 characters).').isLength({min: 5}),
+  check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+  check('Password', 'Password is required.').not().isEmpty(),
+  check('Email', 'Email does not appear to be valid.').isEmail()
+], (req, res) => {
+
+  // Check validation object for errors
+  let errors = validationResult(req);
+
+  if(!errors.isEmpty()){
+    return res.status(422).json({errors: errors.array()});
+  }
+
+  let hashedPassword = Users.hashPassword(req.body.Password); // Create hashedPassword from given Password
+
+  // Create new user
+  Users.findOne({Username : req.body.Username})
+    .then((user) => {
+      if(user) { // If the same username already exists, send a response that it already exists.
+        return res.status(400).send('User with the Username ' + req.body.Username + ' already exists!')
+      } else { // If the username is unique, create a new user with the given parameters from the request body
+        Users
+          .create({
+            Username: req.body.Username,
+            Password: hashedPassword, // Store only hashed password
+            Email: req.body.Email,
+            Birthday: req.body.Birthday
+          })
+          .then((user) => {res.status(201).json(user)})
+          .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+          })
+        }
+      })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
+
+
 // READ: Get a list of all users
-app.get('/Users', passport.authenticate('jwt', {session: false}), (req, res) => {
+app.get('/users', passport.authenticate('jwt', {session: false}), (req, res) => {
   Users.find()
     .then((users) => {
       res.status(201).json(users);
@@ -111,8 +178,8 @@ app.get('/Users', passport.authenticate('jwt', {session: false}), (req, res) => 
 });
 
 
-// READ: Get a user by username
-app.get('/Users/:Username', passport.authenticate('jwt', {session: false}), (req, res) => {
+// READ: Get data on a single user by username
+app.get('/users/:Username', passport.authenticate('jwt', {session: false}), (req, res) => {
   Users.findOne({ Username: req.params.Username })
     .then((user) => {
       res.json(user);
@@ -123,74 +190,45 @@ app.get('/Users/:Username', passport.authenticate('jwt', {session: false}), (req
     });
 });
 
-// Post: Allow new users to register
-/* We’ll expect JSON in this format
-{
-  ID: Integer,
-  Username: String,
-  Password: String,
-  Email: String,
-  Birthday: Date
-}*/
-app.post('/Users', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Users.findOne({ Username: req.body.Username })
-    .then((user) => {
-      if (user) {
-        return res.status(400).send(req.body.Username + 'already exists');
-      } else {
-        Users
-          .create({
-            Username: req.body.Username,
-            Password: req.body.Password,
-            Email: req.body.Email,
-            Birthday: req.body.Birthday
-          })
-          .then((user) =>{res.status(201).json(user) })
-        .catch((error) => {
-          console.error(error);
-          res.status(500).send('Error: ' + error);
-        })
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).send('Error: ' + error);
-    });
-});
 
-// PUT: Allow users to Update a user's info, by username
-/* We’ll expect JSON in this format
-{
-  Username: String,
-  (required)
-  Password: String,
-  (required)
-  Email: String,
-  (required)
-  Birthday: Date
-}*/
-app.put('/Users/:Username', passport.authenticate('jwt', { session:false }), (req, res) => {
-  Users.findOneAndUpdate({ Username: req.params.Username }, { $set:
-    {
+// UPDATE: Allow users to update their user info (find by username), expecting request body with updated info
+app.put('/users/:Username', passport.authenticate('jwt', {session: false}),
+// Validation logic
+[
+  check('Username', 'Username is required (min 5 characters).').isLength({min: 5}),
+  check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+  check('Password', 'Password is required.').not().isEmpty(),
+  check('Email', 'Email does not appear to be valid.').isEmail()
+], (req, res) => {
+  // Check validation object for errors
+  let errors = validationResult(req);
+
+  if(!errors.isEmpty()){
+    return res.status(422).json({errors: errors.array()});
+  }
+
+  let hashedPassword = Users.hashPassword(req.body.Password); // Create hashedPassword from given Password
+
+  Users.findOneAndUpdate({ Username: req.params.Username }, // Find user by existing username 
+   { $set: { // Info from request body that can be updated
       Username: req.body.Username,
-      Password: req.body.Password,
+      Password: hashedPassword, // Store only hashed password
       Email: req.body.Email,
       Birthday: req.body.Birthday
     }
-  },
-  { new: true }, // This line makes sure that the updated document is returned
-  (err, updatedUser) => {
-    if(err) {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    } else {
-      res.json(updatedUser);
-    }
-  });
+   },
+  { new: true }) // This line makes sure that the updated document is returned
+  .then((updatedUser) => {
+    res.json(updatedUser); // Return json object of updatedUser
+   })
+   .catch((err) => {
+     console.error(err);
+     res.status(500).send('Error: ' + err);
+   });
 });
 
 // POST: Add a movie to a user's list of favorites
-app.post('/Users/:Username/movies/:MovieID', passport.authenticate('jwt', { session:false }), (req, res) => {
+app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session:false }), (req, res) => {
   Users.findOneAndUpdate({ Username: req.params.Username }, { // Find user by username
      $push: { FavoriteMovies: req.params.MovieID } // Add movie to the list
    },
@@ -205,7 +243,7 @@ app.post('/Users/:Username/movies/:MovieID', passport.authenticate('jwt', { sess
 });
 
 // DELETE: Allow users to remove a movie from their list of favorites
-app.delete('/Users/:Username/movies/:MovieID', passport.authenticate('jwt', { session:false }), (req, res) => {
+app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session:false }), (req, res) => {
   Users.findOneAndUpdate({Username : req.params.Username}, // Find user by username
     {$pull: { FavoriteMovies: req.params.MovieID}}, // Remove movie from the list
     { new : true }) // Return the updated document
@@ -219,7 +257,7 @@ app.delete('/Users/:Username/movies/:MovieID', passport.authenticate('jwt', { se
 });
 
 // DELETE: Delete a user by username (Allow user to deregister)
-app.delete('/Users/:Username', passport.authenticate('jwt', { session:false }), (req, res) => {
+app.delete('/users/:Username', passport.authenticate('jwt', { session:false }), (req, res) => {
   Users.findOneAndRemove({ Username: req.params.Username }) // Find user by username
     .then((user) => {
       if (!user) {
@@ -248,7 +286,8 @@ app.use((err, req, res, next) => {
 })
 
 // listen for requests
-app.listen(8080, () => {
-  console.log('Your app is listening on port 8080.')
-})
+const port = process.env.PORT || 8080;
+app.listen(port, '0.0.0.0',() => {
+ console.log('Listening on Port ' + port);
+});
 
