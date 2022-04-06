@@ -24,8 +24,7 @@ passport.use(new LocalStrategy ({ //“LocalStrategy,” defines your basic HTTP
 
         //Hashes any password entered by the user when logging in before comparing it to the password stored in MongoDB 
         //validate any password a user enters. 
-        if (!user.validatePassword(password)) { //This is why validatePassword in user.validatePassword(password) will have 
-            //its 'this' value (pay attention to this.password in models.js) referring to the actual user document rather than userSchema.methods(from models.js).
+        if (!user.validatePassword(password)) { 
            console.log('incorrect password');
            return callback(null, false, {message: 'Incorrect password.'});
           }
