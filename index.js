@@ -67,13 +67,14 @@ app.get('/', (req, res) => {
 
 
 // READ: Return a list of ALL movies to the user
-app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => { //Now, any request to the “movies” endpoint will require a JWT from the client. The JWT will be decoded and checked by the JWT authentication strategy in Passport.js, which will authenticate the request.
+app.get('/movies', function (req, res) { //Now, any request to the “movies” endpoint will require a JWT from the client. The JWT will be decoded and checked by the JWT authentication strategy in Passport.js, which will authenticate the request.
   Movies.find()
-    .then((movies) => {
-      res.status(200).json(movies);
+    .then(function (movies) {
+      res.status(201).json(movies);
     })
-    .catch((err) => {
-      res.status(500).send('Error: '+ err);
+    .catch(function (error) {
+      console.error(error);
+      res.status(500).send('Error: ' + error);
     });
 });
 
