@@ -5,7 +5,7 @@ const jwtSecret = 'your_jwt_secret'; //This has to be the same key used in the J
 const jwt = require('jsonwebtoken'),
   passport = require('passport');
 const { User } = require('./models');
-require('./passport'); //Your local passport file
+require('./passport'); //Import your local passport file
 
 //Creates the JWT (Json web token)
 //using the LocalStrategy from passport.js we first check that username/password in the body of the request exists in the database.
