@@ -1,0 +1,6 @@
+mongoimport --uri mongodb+srv://jtsapos:Wangfed00!@myflixsdb.kfbn3.mongodb.net/myFlixDB --collection movies --type json --file myFlixmovies1.json
+
+mongorestore --uri mongodb+srv://jtsapos:Wangfed00!@myflixsdb.kfbn3.mongodb.net/myFlixDB --collection movies --type json --file myFlixmovies1.json
+
+
+mongodb+srv://jtsapos:<password>@myflixsdb.kfbn3.mongodb.net/test
